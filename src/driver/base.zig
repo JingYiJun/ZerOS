@@ -1,0 +1,3 @@
+pub const KERNEL_BASE = 0xffff_0000_0000_0000;
+pub const MMIO_BASE = KERNEL_BASE + 0x3F00_0000;
+pub const LOCAL_BASE = KERNEL_BASE + 0x4000_0000;
