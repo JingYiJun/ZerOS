@@ -70,7 +70,7 @@ _start:
      * see <https://github.com/raspberrypi/tools/blob/master/armstubs/armstub8.S>.
      * which has been incorporated in `start.elf` (or `bootcode.bin`?).
      */
-    mov x15, x0
+    mov     x15, x0
     adr     x0, entry
     mov     x1, #1
     mov     x2, #2
@@ -176,6 +176,6 @@ el1:
     msr     spsel, #1
     mov     sp, x9
 
-    mov x0, x15
+    mov     x0, x15
     ldr     x9, =main
     br      x9

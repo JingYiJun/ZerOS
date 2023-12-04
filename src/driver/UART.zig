@@ -1,3 +1,5 @@
+const std = @import("std");
+
 const GPIO = @import("GPIO.zig");
 const base = @import("base.zig");
 const Arch = @import("../aarch64/Arch.zig");
@@ -76,4 +78,13 @@ pub fn puts(s: []const u8) void {
     for (s) |c| {
         put_char(c);
     }
+}
+
+var buf: [512]u8 = undefined;
+
+pub fn printf(comptime fmt: []const u8, args: anytype) void {
+    const buf_print_to = std.fmt.bufPrint(&buf, fmt, args) catch |err| {
+        @panic(@errorName(err));
+    };
+    puts(buf_print_to);
 }

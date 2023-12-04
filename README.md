@@ -19,17 +19,17 @@
 
 #### 安装 Zig
 
-Zig 目前正在快速迭代，每个小版本的 API 都会有很大变动。官方推荐用最新的 master 分支。
+Zig 目前正在快速迭代，每个小版本的 API 都会有很大变动。目前推荐使用 0.11.1 稳定版。
 
 安装过程详见：https://ziglang.org/learn/getting-started/，源码仓库：https://github.com/ziglang/zig
 
-如果从源码构建，需要安装 `clang-16 libclang-16-dev llvm-16 libllvm-16-dev lld-16 liblld-16-dev zstd libzstd-dev` ，必须是 16 版本。CMake 构建必须要指定 `CLANG_INCLUDE_DIRS` 和 `LLD_INCLUDE_DIRS`。
+如果从源码构建，需要安装 `clang-16 libclang-16-dev llvm-16 libllvm16 lld-16 liblld-16-dev zstd libzstd-dev` ，必须是 16 版本。CMake 构建必须要指定 `CLANG_INCLUDE_DIRS` 和 `LLD_INCLUDE_DIRS`。
 
 这是我的构建命令：
 
 ```shell
 mkdir build && cd build
-cmake .. -DCLANG_INCLUDE_DIRS=/usr/lib/clang/16 -DLLD_INCLUDE_DIRS=/usr/lib/llvm-16 -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_BUILD_TYPE=Release
+cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_BUILD_TYPE=Release -DCLANG_INCLUDE_DIRS=/usr/lib/llvm-16 -DLLD_INCLUDE_DIRS=/usr/lib/llvm-16
 make -j && make install
 ```
 
@@ -37,7 +37,7 @@ make -j && make install
 
 zls 是 Zig 的语言服务器，建议安装。
 
-[zls](https://github.com/zigtools/zls)。要求使用本地 Zig 构建。
+[zls](https://github.com/zigtools/zls)。可以使用 0.11.0 版本的二进制包，也可以使用本地 Zig （master 版本）构建。
 
 zls 项目根目录下，我的构建命令是：
 

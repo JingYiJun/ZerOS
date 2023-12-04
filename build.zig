@@ -68,8 +68,18 @@ pub fn build(b: *std.Build) !void {
     });
     kernel_hdr.step.dependOn(b.getInstallStep());
 
+    // delete output files before output
+    const kernel_asm_output_clean = b.addSystemCommand(&.{
+        "rm",
+        "-rf",
+        kernel_asm_path,
+        kernel_asm_error_path,
+        kernel_hdr_path,
+    });
+
     // relocate stdout and stderr to files
     const kernel_asm_output = b.addWriteFiles();
+    kernel_asm_output.step.dependOn(&kernel_asm_output_clean.step);
     kernel_asm_output.step.dependOn(&kernel_asm.step);
     kernel_asm_output.step.dependOn(&kernel_hdr.step);
     kernel_asm_output.addCopyFileToSource(kernel_asm.captureStdOut(), kernel_asm_path);
@@ -174,6 +184,7 @@ pub fn build(b: *std.Build) !void {
     const qemu_command = b.addSystemCommand(try current_qemu_args.toOwnedSlice());
 
     qemu_command.step.dependOn(&kernel_img.step);
+    qemu_command.step.dependOn(&kernel_asm_output_clean.step);
     qemu_command.step.dependOn(&kernel_asm_output.step);
     qemu_command.step.dependOn(copy_files_into_boot_partition_step);
     qemu_step.dependOn(&qemu_command.step);
@@ -188,6 +199,7 @@ pub fn build(b: *std.Build) !void {
     });
     const qemu_debug_command = b.addSystemCommand(try current_qemu_args.toOwnedSlice());
     qemu_debug_command.step.dependOn(&kernel_img.step);
+    qemu_debug_command.step.dependOn(&kernel_asm_output_clean.step);
     qemu_debug_command.step.dependOn(&kernel_asm_output.step);
     qemu_debug_command.step.dependOn(copy_files_into_boot_partition_step);
     qemu_debug_step.dependOn(&qemu_debug_command.step);
@@ -209,7 +221,7 @@ pub fn build(b: *std.Build) !void {
         "rm",
         "-rf",
         "zig-cache",
-        b.getInstallPath(.prefix, ""),
+        b.getInstallPath(.bin, "*"),
     });
     clean_step.dependOn(&clean_command.step);
 }

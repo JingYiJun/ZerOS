@@ -11,8 +11,8 @@ pub inline fn cpu_id() usize {
 }
 
 // instruct compiler not to reorder instructions around the fence.
-pub inline fn fence() void {
-    @fence(.AcqRel);
+pub inline fn compiler_fence() void {
+    asm volatile ("" ::: "memory");
 }
 
 inline fn read_system_register(comptime name: []const u8) usize {
@@ -49,15 +49,15 @@ pub inline fn stop_cpu() noreturn {
 // regions are already marked as nGnRnE in `kernel_pt`.
 
 pub inline fn device_put_u32(addr: usize, value: u32) void {
-    fence();
+    compiler_fence();
     @as(*volatile u32, @ptrFromInt(addr)).* = value;
-    fence();
+    compiler_fence();
 }
 
 pub inline fn device_get_u32(addr: usize) u32 {
-    fence();
+    compiler_fence();
     const result = @as(*volatile u32, @ptrFromInt(addr)).*;
-    fence();
+    compiler_fence();
     return result;
 }
 
